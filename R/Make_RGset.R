@@ -21,7 +21,7 @@ library(dplyr)
 #' @return Epigenetic set object.
 #' @export
 #'
-#' @examples
+
 Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_testsamples=5, save=FALSE){
   if(name==""){
     name <- lapply(idat_paths, function(path){path %>% base::strsplit("/") %>% unlist() %>% tail(n=1)}) %>% paste(collapse = "_")
