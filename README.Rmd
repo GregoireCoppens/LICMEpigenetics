@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of LICMEpigenetics is to ...
+The goal of LICMEpigenetics is to provide an easy to use wrapper for the minfi package to process epigenetic data.
 
 ## Installation
 

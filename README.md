@@ -7,8 +7,8 @@
 
 <!-- badges: end -->
 
-The goal of LICMEpigenetics is to provide a convient wrapper around the
-minfi package to easily process epigenetic data.
+The goal of LICMEpigenetics is to provide an easy to use wrapper for the
+minfi package to process epigenetic data.
 
 ## Installation
 
