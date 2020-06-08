@@ -2,16 +2,20 @@
 % Please edit documentation in R/BatchEffect_Visualise.R
 \name{BatchEffect_PCAHeatmap}
 \alias{BatchEffect_PCAHeatmap}
-\title{Title}
+\title{BatchEffect_PCAHeatmap function}
 \usage{
 BatchEffect_PCAHeatmap(x, Cat_vars = c(), Cont_vars = c())
 }
 \arguments{
-\item{Cont_vars}{}
+\item{x}{Epigenetic set object.}
+
+\item{Cat_vars}{Categorical variables for the heatmap}
+
+\item{Cont_vars}{Continues variables for the heatmap}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function that creates a p-value heatmap from categorical and continuous variables using F-tests and correlation tests (Pearson's product) to evaluate the presence of batch effect.
 }

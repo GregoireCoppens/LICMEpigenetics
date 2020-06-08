@@ -2,16 +2,20 @@
 % Please edit documentation in R/Preprocess_ProbeNormalisation.R
 \name{ProbeNormalisation}
 \alias{ProbeNormalisation}
-\title{Title}
+\title{ProbeNormalisation function}
 \usage{
 ProbeNormalisation(x, quant = TRUE, save = FALSE)
 }
 \arguments{
-\item{save}{}
+\item{x}{Epigenetic set object.}
+
+\item{quant}{If TRUE, a quantile normalisation will be preformed, otherwise a functional normalisation will be done.}
+
+\item{save}{If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Functional or Quantile Normalisation of the CpG probes.
 }

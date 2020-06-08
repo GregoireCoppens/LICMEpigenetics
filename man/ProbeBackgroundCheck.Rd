@@ -2,16 +2,16 @@
 % Please edit documentation in R/Preprocess_ProbeNormalisation.R
 \name{ProbeBackgroundCheck}
 \alias{ProbeBackgroundCheck}
-\title{Title}
+\title{ProbeBackgroundCheck function}
 \usage{
 ProbeBackgroundCheck(x)
 }
 \arguments{
-\item{x}{}
+\item{x}{Epigenetic set object.}
 }
 \value{
-
+an updated Epigenetic set object with the background check included.
 }
 \description{
-Title
+A function that detects which probes from the rgset do not differ from the background probes.
 }

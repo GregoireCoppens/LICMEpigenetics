@@ -1,48 +1,43 @@
-
-library(minfi)
-library(minfiDataEPIC)
-
-# install.packages("tidyverse")
-library(dplyr)
-library(tidyr)
-library(readxl)
-
-# BiocManager::install("factoextra", update=FALSE)
-library(factoextra)
-
-
-
-#' Title
+#' @title ProbeBackgroundCheck function
+#' @description A function that detects which probes from the rgset do not differ from the background probes.
 #'
-#' @param x
+#' @param x Epigenetic set object.
 #'
-#' @return
+#' @return an updated Epigenetic set object with the background check included.
+#'
+#' @import dplyr
+#'
+#' @importFrom minfi detectionP
+#' @importFrom rlang .data
+#'
 #' @export
 #'
-#' @examples
 ProbeBackgroundCheck <- function(x){
   detP <- detectionP(x$rgset, type = "m+u")
   failed_01<-detP > 0.01
-  # save(failed_01, file = detectionP_filename)
 
-  df_rs <- tibble(names = rownames(failed_01), n_nonsig = rowSums(1*failed_01), n_cols = ncol(detP), perc = n_nonsig/n_cols*100) %>% arrange(perc)
-  DetectionP_failed_s50 <- df_rs %>% filter(n_nonsig>ncol(x$rgset)/2)
+  df_rs <- tibble(names = rownames(failed_01), n_nonsig = rowSums(1*failed_01), n_cols = ncol(detP), perc = .data$n_nonsig/.data$n_cols*100) %>% arrange(.data$perc)
+  DetectionP_failed_s50 <- filter(df_rs, .data$n_nonsig>ncol(x$rgset)/2)
 
   x$excludedProbes$FailedBackgroundProbes <- DetectionP_failed_s50
   invisible(x)
 }
 
 # ERROR with openblast, solution: https://support.bioconductor.org/p/122925/
-#' Title
+#' @title ProbeNormalisation function
+#' @description Functional or Quantile Normalisation of the CpG probes.
 #'
-#' @param x
-#' @param quant
-#' @param save
+#' @param x Epigenetic set object.
+#' @param quant If TRUE, a quantile normalisation will be preformed, otherwise a functional normalisation will be done.
+#' @param save If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.
 #'
-#' @return
+#' @return Updated Epigenetic set object.
+#'
+#' @importFrom minfi preprocessFunnorm
+#' @importFrom minfi preprocessQuantile
+#'
 #' @export
 #'
-#' @examples
 ProbeNormalisation <- function(x, quant=TRUE, save=FALSE){
   if(ncol(x$rgset)>=500) message("Warning: This set might be too large to fit in your RAM memory")
   if(!quant){
@@ -61,19 +56,24 @@ ProbeNormalisation <- function(x, quant=TRUE, save=FALSE){
 }
 
 
-#' Title
+#' @title ProbeExclusion function
+#' @description Removes probes on SNPS, Sex chromosomes or that do not differ from the background noise.
 #'
-#' @param x
-#' @param snps
-#' @param sex
-#' @param background
-#' @param ExportSNPs
+#' @param x Epigenetic set object.
+#' @param snps Which SNPs position should considered when excluding probes on SNPs.
+#' @param sex If TRUE, probes on the sex chromosomes are excluded.
+#' @param background If TRUE, a background check will be completed and those probes which signals do not differ from the background noise, will be removed.
+#' @param ExportExcludedProbes if TRUE, the locations of all the removed probes will be saved in the Epigenetic set and exported to a '.csv' file
 #'
-#' @return
+#' @return Updated Epigenetic set object.
+#'
+#' @importFrom minfi getAnnotation
+#' @importFrom minfi addSnpInfo
+#' @importFrom minfi dropLociWithSnps
+#' @importFrom utils write.csv
 #' @export
 #'
-#' @examples
-ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportSNPs = TRUE){
+ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = TRUE){
   # Removing CpGs
   # Source: http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0194938.s001
   # Remove Sex
@@ -83,7 +83,7 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
   SNP_cpgs <- c()
   if(sex){
     autosomes <-  annotation[!annotation$chr %in% c("chrX","chrY"), ]
-    sex_cpgs <-  annotation[annotation$chr %in% c("chrX","chrY"), ] %>% rownames()
+    sex_cpgs <-  rownames(annotation[annotation$chr %in% c("chrX","chrY"), ])
     x$mset <- x$mset[rownames(x$mset) %in% row.names(autosomes),]
     x$params$sexExcl = TRUE
     message("CpGs after sex removal: ",nrow(x$mset))
@@ -105,7 +105,7 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
     x$params$SnpExcl <- NULL
     x$params$SnpSexExcl <- TRUE
   }
-  if(ExportSNPs){
+  if(ExportExcludedProbes){
     df_sex <- data.frame("CpG" = sex_cpgs, "Type"="Sex")
     df_SNP <- data.frame("CpG" = SNP_cpgs, "Type"="SNP")
     x$excludedProbes$SexSNPs <- rbind(df_sex, df_SNP)
@@ -116,10 +116,10 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
   if(background){
     x <- ProbeBackgroundCheck(x)
     badCpGs <- x$excludedProbes$FailedBackgroundProbes$names
-
-    x$excludedProbes$backgroundCheck <- data.frame("CpG"=badCpGs, "Type"="FailedBackgroundCheck")
-
-    write.csv(x$excludedProbes$backgroundCheck, getPath(x,"ExcludedProbes_BackgroundCheck", "output/ProbeSelection", ".csv"))
+    if(ExportExcludedProbes){
+      x$excludedProbes$backgroundCheck <- data.frame("CpG"=badCpGs, "Type"="FailedBackgroundCheck")
+      write.csv(x$excludedProbes$backgroundCheck, getPath(x,"ExcludedProbes_BackgroundCheck", "output/ProbeSelection", ".csv"))
+    }
 
     goodCpGs <- rownames(x$mset)[-grep(paste0(badCpGs, collapse = "|"), rownames(x$mset))]
     x$mset <- x$mset[goodCpGs,]
@@ -130,18 +130,22 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
   invisible(x)
 }
 
-#' Title
+#' @title ConvertSet function
+#' @description Converts the methylset into a beta or M set.
 #'
-#' @param x
-#' @param beta
-#' @param M
-#' @param save
+#' @param x Epigenetic set object.
+#' @param beta If TRUE, the methylset will be converted in a beta set.
+#' @param M If TRUE, the methylset will be converted in a M set.
+#' @param save If TRUE, the beta or M set will be saved to the "minfi_sets" sub-directory
 #'
-#' @return
+#' @return Updated Epigenetic set object.
+#'
+#' @importFrom minfi getBeta
+#' @importFrom minfi getM
+#' @importFrom utils write.csv
 #' @export
 #'
-#' @examples
-ConvertSet <- function(x, beta=TRUE, M=TRUE, save=TRUE){
+ConvertSet <- function(x, beta=TRUE, M=FALSE, save=TRUE){
   # betas
   if(beta){
     bset_temp <- getBeta(x$mset)

@@ -2,16 +2,22 @@
 % Please edit documentation in R/Preprocess_QualityChecks.R
 \name{FindBadSamples}
 \alias{FindBadSamples}
-\title{Title}
+\title{FindBadSamples function}
 \usage{
-FindBadSamples(x, badSamples = c(), n = 4, ylim = c(0, 5), showPDF = TRUE)
+FindBadSamples(x, badSamples = c(), n = 4, ylim = c(0, 5))
 }
 \arguments{
-\item{showPDF}{}
+\item{x}{Epigenetic set object.}
+
+\item{badSamples}{Number or filenames of the bad idat files.}
+
+\item{n}{number of density plots per plot. Max 4 is suggested.}
+
+\item{ylim}{range of the y-axis}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function to visually find bad samples with non-bimodal distributions using density plots.
 }

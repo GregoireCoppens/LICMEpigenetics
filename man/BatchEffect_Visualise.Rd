@@ -2,7 +2,7 @@
 % Please edit documentation in R/BatchEffect_Visualise.R
 \name{BatchEffect_Visualise}
 \alias{BatchEffect_Visualise}
-\title{Title}
+\title{BatchEffect_Visualise function}
 \usage{
 BatchEffect_Visualise(
   x,
@@ -17,11 +17,27 @@ BatchEffect_Visualise(
 )
 }
 \arguments{
-\item{ylim}{}
+\item{x}{Epigenetic set object.}
+
+\item{df}{Metadata}
+
+\item{by}{Name of the column to merge existing data with}
+
+\item{batch}{The non-biological factor that we want to investigate for batch effect.}
+
+\item{Cat_vars}{Categorical variables for the heatmap}
+
+\item{Cont_vars}{Continues variables for the heatmap}
+
+\item{n}{number of samples per plot}
+
+\item{xlim}{range of the x-axis}
+
+\item{ylim}{range of the y-axis}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function to visualise batch effect using point plots and heatmaps. This function combines the MergeMetadata, BatchEffect_PointPlot and BatchEffect_PCAHeatmap function.
 }

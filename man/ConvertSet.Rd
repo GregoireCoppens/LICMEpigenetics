@@ -2,16 +2,22 @@
 % Please edit documentation in R/Preprocess_ProbeNormalisation.R
 \name{ConvertSet}
 \alias{ConvertSet}
-\title{Title}
+\title{ConvertSet function}
 \usage{
-ConvertSet(x, beta = TRUE, M = TRUE, save = TRUE)
+ConvertSet(x, beta = TRUE, M = FALSE, save = TRUE)
 }
 \arguments{
-\item{save}{}
+\item{x}{Epigenetic set object.}
+
+\item{beta}{If TRUE, the methylset will be converted in a beta set.}
+
+\item{M}{If TRUE, the methylset will be converted in a M set.}
+
+\item{save}{If TRUE, the beta or M set will be saved to the "minfi_sets" sub-directory}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Converts the methylset into a beta or M set.
 }

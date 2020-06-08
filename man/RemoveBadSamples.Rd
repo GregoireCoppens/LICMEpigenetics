@@ -2,16 +2,20 @@
 % Please edit documentation in R/Preprocess_QualityChecks.R
 \name{RemoveBadSamples}
 \alias{RemoveBadSamples}
-\title{Title}
+\title{RemoveBadSamples function}
 \usage{
 RemoveBadSamples(x, badSamplesNames = c(), badSamplesNum = c())
 }
 \arguments{
-\item{badSamplesNum}{}
+\item{x}{Epigenetic set object.}
+
+\item{badSamplesNames}{Filenames from bad samples}
+
+\item{badSamplesNum}{Index numbers from bad samples.}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function to remove bad samples from an epigenetic set. This function also outputs a pdf with density plots highlighting the removed samples and without the bad samples.
 }

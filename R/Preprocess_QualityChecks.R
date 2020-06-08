@@ -1,16 +1,23 @@
-#' Title
+#' @title FindBadSamples function
+#' @description  Function to visually find bad samples with non-bimodal distributions using density plots.
 #'
-#' @param x
-#' @param badSamples
-#' @param n
-#' @param ylim
-#' @param showPDF
+#' @param x Epigenetic set object.
+#' @param badSamples Number or filenames of the bad idat files.
+#' @param n number of density plots per plot. Max 4 is suggested.
+#' @param ylim range of the y-axis
 #'
-#' @return
+#' @return Updated Epigenetic set object.
+#'
+#' @import minfiDataEPIC
+#' @importFrom minfi densityPlot
+#' @importFrom  minfi preprocessRaw
+#'
+#' @importFrom grDevices pdf
+#' @importFrom grDevices dev.off
+#'
 #' @export
-#'
 
-FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5), showPDF=TRUE){
+FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
   if(is.null(x$bset_raw)){
     betas <- preprocessRaw(x$rgset) %>% getBeta()
   }else{
@@ -48,25 +55,29 @@ FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5), showPDF=TRUE){
                 ylim = ylim)
   }
   dev.off()
-  if(showPDF) try(openPDF(normalizePath(pdf_filepath)))
   invisible(x)
 }
 
 
 
-#' Title
+#' @title RemoveBadSamples function
+#' @description Function to remove bad samples from an epigenetic set. This function also outputs a pdf with density plots highlighting the removed samples and without the bad samples.
+#' @param x Epigenetic set object.
+#' @param badSamplesNames Filenames from bad samples
+#' @param badSamplesNum Index numbers from bad samples.
 #'
-#' @param x
-#' @param badSamplesNames
-#' @param badSamplesNum
+#' @return Updated Epigenetic set object.
 #'
-#' @return
+#' @importFrom minfi densityPlot
+#'
+#' @importFrom grDevices pdf
+#' @importFrom grDevices dev.off
+#'
 #' @export
 #'
-#' @examples
 RemoveBadSamples <- function(x, badSamplesNames=c(), badSamplesNum=c()){
-  badSamplesNum <- c(which(colnames(rgset) %in% badSamplesNames), badSamplesNum) %>% unique()
-  x <- FindBadSamples(x, badSamplesNum,showPDF = FALSE)
+  badSamplesNum <- c(which(colnames(x$rgset) %in% badSamplesNames), badSamplesNum) %>% unique()
+  x <- FindBadSamples(x, badSamplesNum)
 
   if(length(badSamplesNum)){
     badSamplesSwabnames <- x$excludedSamples$df_badSamples$SwabName

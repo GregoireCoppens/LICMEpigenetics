@@ -2,16 +2,20 @@
 % Please edit documentation in R/BatchEffect_Visualise.R
 \name{MergeMetadata}
 \alias{MergeMetadata}
-\title{Title}
+\title{MergeMetadata function}
 \usage{
 MergeMetadata(x, df, by)
 }
 \arguments{
-\item{by}{}
+\item{x}{Epigenetic set object.}
+
+\item{df}{Metadata}
+
+\item{by}{Name of the column to merge existing data with}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function to merge the metadata with the principal component data.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/BatchEffect_Visualise.R
 \name{BatchEffect_PointPlot}
 \alias{BatchEffect_PointPlot}
-\title{Title}
+\title{BatchEffect_PointPlot Function}
 \usage{
 BatchEffect_PointPlot(
   x,
@@ -13,11 +13,19 @@ BatchEffect_PointPlot(
 )
 }
 \arguments{
-\item{ylim}{}
+\item{x}{Epigenetic set object.}
+
+\item{batch}{The non-biological factor which we want to investigate for batch effect.}
+
+\item{n}{Number of samples per plot. It is advised to not exceed 6 groups per plot.}
+
+\item{xlim}{range of the x-axis}
+
+\item{ylim}{range of the y-axis}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Make pointplots from the first 3 principical components from the beta set to assess wether batch effect is present. Every Plot should only contain maximum 6 groups to maintain an overview.
 }

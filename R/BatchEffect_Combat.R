@@ -1,18 +1,20 @@
-# packages
-library(sva)
-
-# Formula: One-sided formula
-#' Title
+#' @title BatchEffect_Combat function
+#' @description Function to do a batch correction using combat on the beta set from the epigenetic set.
 #'
-#' @param x
-#' @param batch
-#' @param RiskFactors
-#' @param save
+#' @param x Epigenetic set object.
+#' @param batch Non-biological factor for which the beta set needs to be corrected.
+#' @param RiskFactors Risk factors for which the Combat algorithm needs to correct
+#' @param save If TRUE, the new bset will be saved into the minfi_sets directory.
 #'
-#' @return
+#' @return Updated Epigenetic set object.
+#'
+#' @import sva
+#' @importFrom stats as.formula
+#' @importFrom stats model.matrix
+#'
 #' @export
 #'
-#' @examples
+
 BatchEffect_Combat <- function(x, batch, RiskFactors, save=TRUE){
   if(class(RiskFactors) != "formula"){
     formula <- as.formula(paste0("~", paste(RiskFactors, collapse = "+")))

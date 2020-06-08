@@ -2,16 +2,22 @@
 % Please edit documentation in R/BatchEffect_Combat.R
 \name{BatchEffect_Combat}
 \alias{BatchEffect_Combat}
-\title{Title}
+\title{BatchEffect_Combat function}
 \usage{
 BatchEffect_Combat(x, batch, RiskFactors, save = TRUE)
 }
 \arguments{
-\item{save}{}
+\item{x}{Epigenetic set object.}
+
+\item{batch}{Non-biological factor for which the beta set needs to be corrected.}
+
+\item{RiskFactors}{Risk factors for which the Combat algorithm needs to correct}
+
+\item{save}{If TRUE, the new bset will be saved into the minfi_sets directory.}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Function to do a batch correction using combat on the beta set from the epigenetic set.
 }

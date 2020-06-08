@@ -9,6 +9,7 @@
 #' @return Returns a filepath.
 #' @export
 #'
+#'
 #' @examples
 #' getPath(list(name="test", params=list(combatChip = TRUE, combatRow=TRUE, recalibrate=FALSE)))
 #' getPath("rgset", "plot3", "output")

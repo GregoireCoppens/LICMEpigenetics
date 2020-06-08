@@ -2,22 +2,28 @@
 % Please edit documentation in R/BatchEffect_prc.R
 \name{BatchEffect_prc}
 \alias{BatchEffect_prc}
-\title{Title}
+\title{BatchEffect_prc function}
 \usage{
 BatchEffect_prc(
   x,
-  n_pcas = 8,
+  n_pcs = 8,
   filename_info = c("Chip", "Well", "Swabnr", "Experiment_Method", "Patient_Group",
     "Patient_Number", "Experiment_Group", "Time"),
   filename_separator = "_"
 )
 }
 \arguments{
-\item{filename_separator}{}
+\item{x}{Epigenetic set object.}
+
+\item{n_pcs}{numbers of principical components that need to be created. The default is 8.}
+
+\item{filename_info}{A vector that explains the structure of the idat filename, such that the experiment info can be extrated using the idat filename.}
+
+\item{filename_separator}{A string that identifies how the filename structure is devided. The default is "_"}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Creates principical components from the beta set to assess batch effect.
 }

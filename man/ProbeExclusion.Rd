@@ -2,22 +2,30 @@
 % Please edit documentation in R/Preprocess_ProbeNormalisation.R
 \name{ProbeExclusion}
 \alias{ProbeExclusion}
-\title{Title}
+\title{ProbeExclusion function}
 \usage{
 ProbeExclusion(
   x,
   snps = c("CpG", "SBE"),
   sex = TRUE,
   background = TRUE,
-  ExportSNPs = TRUE
+  ExportExcludedProbes = TRUE
 )
 }
 \arguments{
-\item{ExportSNPs}{}
+\item{x}{Epigenetic set object.}
+
+\item{snps}{Which SNPs position should considered when excluding probes on SNPs.}
+
+\item{sex}{If TRUE, probes on the sex chromosomes are excluded.}
+
+\item{background}{If TRUE, a background check will be completed and those probes which signals do not differ from the background noise, will be removed.}
+
+\item{ExportExcludedProbes}{if TRUE, the locations of all the removed probes will be saved in the Epigenetic set and exported to a '.csv' file}
 }
 \value{
-
+Updated Epigenetic set object.
 }
 \description{
-Title
+Removes probes on SNPS, Sex chromosomes or that do not differ from the background noise.
 }
