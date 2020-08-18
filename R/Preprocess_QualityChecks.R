@@ -5,6 +5,7 @@
 #' @param badSamples Number or filenames of the bad idat files.
 #' @param n number of density plots per plot. Max 4 is suggested.
 #' @param ylim range of the y-axis
+#' @param Swabname_position Position of swabname in the filename (separated by "_")
 #'
 #' @return Updated Epigenetic set object.
 #'
@@ -17,7 +18,7 @@
 #'
 #' @export
 
-FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
+FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5), Swabname_position=3){
   if(is.null(x$bset_raw)){
     betas <- preprocessRaw(x$rgset) %>% getBeta()
   }else{
@@ -33,7 +34,13 @@ FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
     if(is.numeric(badSamples)) badSamplesNum <- badSamples
     if(is.character(badSamples)) badSamplesNum <- which(colnames(betas) %in% badSamples)
     badSamplesNames <- colnames(betas)[badSamplesNum]
-    badSamplesSwabnames <- unlist(lapply(badSamplesNames, function(x) strsplit(x,"_")[[1]][[3]]))
+
+    # To do: Make more universal
+    if(all(grepl("_", badSamplesNames))){
+      badSamplesSwabnames <- unlist(lapply(badSamplesNames, function(x) strsplit(x,"_")[[1]][[Swabname_position]]))
+    }else{
+      badSamplesSwabnames <- badSamplesNames
+    }
     x$excludedSamples$df_badSamples <- data.frame(Number = badSamplesNum, Name = badSamplesNames, SwabName = badSamplesSwabnames)
     write.csv(x$excludedSamples$df_badSamples, getPath(x, "ExcludedSwabs_ByQC","output/intersampleQC", ".csv"))
   }
@@ -49,10 +56,16 @@ FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
     }
   }
   if(length(badSamplesNum)%%n){
-    densityPlot(betas[,badSamplesNum[c(length(badSamplesNum)-length(badSamplesNum)%%n+1):length(badSamplesNum)]],
-                main="remainder",
-                sampGroups = badSamplesNum[c(length(badSamplesNum)-length(badSamplesNum)%%n+1):length(badSamplesNum)],
-                ylim = ylim)
+    if(length(badSamples)>n){
+      densityPlot(betas[,badSamplesNum[c(length(badSamplesNum)-length(badSamplesNum)%%n+1):length(badSamplesNum)]],
+                  main="remainder",
+                  sampGroups = badSamplesNum[c(length(badSamplesNum)-length(badSamplesNum)%%n+1):length(badSamplesNum)],
+                  ylim = ylim)
+    } else {
+      densityPlot(as.matrix(betas[,badSamplesNum]),
+                  sampGroups = badSamplesNum,
+                  ylim = ylim)
+    }
   }
   dev.off()
   invisible(x)
@@ -65,6 +78,7 @@ FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
 #' @param x Epigenetic set object.
 #' @param badSamplesNames Filenames from bad samples
 #' @param badSamplesNum Index numbers from bad samples.
+#' @param Swabname_position Position of swabname in the filename (separated by "_")
 #'
 #' @return Updated Epigenetic set object.
 #'
@@ -75,9 +89,9 @@ FindBadSamples <- function(x, badSamples=c(), n=4, ylim=c(0,5)){
 #'
 #' @export
 #'
-RemoveBadSamples <- function(x, badSamplesNames=c(), badSamplesNum=c()){
+RemoveBadSamples <- function(x, badSamplesNames=c(), badSamplesNum=c(), Swabname_position=3){
   badSamplesNum <- c(which(colnames(x$rgset) %in% badSamplesNames), badSamplesNum) %>% unique()
-  x <- FindBadSamples(x, badSamplesNum)
+  x <- FindBadSamples(x, badSamplesNum,Swabname_position = Swabname_position)
 
   if(length(badSamplesNum)){
     badSamplesSwabnames <- x$excludedSamples$df_badSamples$SwabName
@@ -85,17 +99,17 @@ RemoveBadSamples <- function(x, badSamplesNames=c(), badSamplesNum=c()){
 
     sampGroups <- rep('Valid',ncol(x$bset_raw))
     sampGroups[badSamplesNum] <- "Invalid"
-    densityPlot(x$bset_raw, xlim=c(-0.1,1.1), ylim = c(0,7), main="All Samples", sampGroups = sampGroups, pal=c("firebrick3", "forestgreen"))
+    densityPlot(as.matrix(x$bset_raw), xlim=c(-0.1,1.1), ylim = c(0,7), main="All Samples", sampGroups = sampGroups, pal=c("firebrick3", "forestgreen"))
 
     x$rgset <- x$rgset[, -badSamplesNum]
     x$bset_raw <- x$bset_raw[, -badSamplesNum]
     x$params <- list(interSampleQC=TRUE)
-    densityPlot(x$bset_raw, main="Valid Samples", pal="darkslateblue", legend = FALSE)
+    densityPlot(as.matrix(x$bset_raw), main="Valid Samples", pal="darkslateblue", legend = FALSE)
 
     dev.off()
   }else{
     pdf(getPath(x,"DensityPlot_All", "output/intersampleQC",".pdf"), onefile = TRUE)
-    densityPlot(x$bset_raw, main="Density plot of All Samples", pal="darkslateblue", legend = FALSE)
+    densityPlot(as.matrix(x$bset_raw), main="Density plot of All Samples", pal="darkslateblue", legend = FALSE)
     dev.off()
   }
   invisible(x)
