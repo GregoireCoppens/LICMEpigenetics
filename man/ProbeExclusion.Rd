@@ -9,7 +9,8 @@ ProbeExclusion(
   snps = c("CpG", "SBE"),
   sex = TRUE,
   background = TRUE,
-  ExportExcludedProbes = TRUE
+  ExportExcludedProbes = TRUE,
+  delay = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ ProbeExclusion(
 \item{background}{If TRUE, a background check will be completed and those probes which signals do not differ from the background noise, will be removed.}
 
 \item{ExportExcludedProbes}{if TRUE, the locations of all the removed probes will be saved in the Epigenetic set and exported to a '.csv' file}
+
+\item{delay}{If TRUE, the excluded probes will be saved, but not yet excluded.}
 }
 \value{
 Updated Epigenetic set object.

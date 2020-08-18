@@ -28,7 +28,8 @@ ProbeBackgroundCheck <- function(x){
 #' @description Functional or Quantile Normalisation of the CpG probes.
 #'
 #' @param x Epigenetic set object.
-#' @param quant If TRUE, a quantile normalisation will be preformed, otherwise a functional normalisation will be done.
+#' @param method Type of normalisation algorithm. Options: funnorm, quantile, raw.
+#' @param nPCs Number of principal components that funnorm uses.
 #' @param save If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.
 #'
 #' @return Updated Epigenetic set object.
@@ -38,15 +39,21 @@ ProbeBackgroundCheck <- function(x){
 #'
 #' @export
 #'
-ProbeNormalisation <- function(x, quant=TRUE, save=FALSE){
+ProbeNormalisation <- function(x, method="funnorm", nPCs = 3, save=FALSE){
   if(ncol(x$rgset)>=500) message("Warning: This set might be too large to fit in your RAM memory")
-  if(!quant){
-    x$mset <- preprocessFunnorm(x$rgset, ratioConvert = FALSE, verbose = 2)
+  if(method=="funnorm"){
+    x$mset <- preprocessFunnorm(x$rgset, ratioConvert = FALSE, nPCs = nPCs, verbose = 2)
     x$params$funnorm <- TRUE
-  } else {
-    x$mset <- preprocessQuantile(x$rgset)
+  }
+  if(method=="quantile"){
+    x$mset <- preprocessQuantile(x$rgset, verbose = 2)
     x$params$quant <- TRUE
   }
+  if(method=="raw"){
+    x$mset <- preprocessRaw(x$rgset)
+    x$params$preprocessRaw <- TRUE
+  }
+  x$normalisationMethod <- method
   if(save){
     mset <- x$mset
     save(mset, file=getPath(x, "mset"))
@@ -64,6 +71,7 @@ ProbeNormalisation <- function(x, quant=TRUE, save=FALSE){
 #' @param sex If TRUE, probes on the sex chromosomes are excluded.
 #' @param background If TRUE, a background check will be completed and those probes which signals do not differ from the background noise, will be removed.
 #' @param ExportExcludedProbes if TRUE, the locations of all the removed probes will be saved in the Epigenetic set and exported to a '.csv' file
+#' @param delay If TRUE, the excluded probes will be saved, but not yet excluded.
 #'
 #' @return Updated Epigenetic set object.
 #'
@@ -73,9 +81,11 @@ ProbeNormalisation <- function(x, quant=TRUE, save=FALSE){
 #' @importFrom utils write.csv
 #' @export
 #'
-ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = TRUE){
+ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = TRUE, delay = FALSE){
   # Removing CpGs
   # Source: http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0194938.s001
+  if(delay) x$mset_old <- x$mset # Temp save original mset
+
   # Remove Sex
   message("CpGs before removal: ",nrow(x$mset))
   annotation <- getAnnotation(x$rgset)
@@ -100,11 +110,21 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
     x$params$SnpExcl = TRUE
     message("CpGs after SNP removal: ",nrow(x$mset))
   }
+
   if(x$params$SnpExcl & x$params$sexExcl){
     x$params$sexExcl <- NULL
     x$params$SnpExcl <- NULL
     x$params$SnpSexExcl <- TRUE
   }
+
+  if(delay){ # Reset all params
+    x$params$sexExcl <- NULL
+    x$params$SnpExcl <- NULL
+    x$params$SnpSexExcl <- NULL
+    x$mset <- x$mset_old
+    x$mset_old <- NULL
+  }
+
   if(ExportExcludedProbes){
     df_sex <- data.frame("CpG" = sex_cpgs, "Type"="Sex")
     df_SNP <- data.frame("CpG" = SNP_cpgs, "Type"="SNP")

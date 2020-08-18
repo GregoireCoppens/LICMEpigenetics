@@ -4,12 +4,14 @@
 \alias{ProbeNormalisation}
 \title{ProbeNormalisation function}
 \usage{
-ProbeNormalisation(x, quant = TRUE, save = FALSE)
+ProbeNormalisation(x, method = "funnorm", nPCs = 3, save = FALSE)
 }
 \arguments{
 \item{x}{Epigenetic set object.}
 
-\item{quant}{If TRUE, a quantile normalisation will be preformed, otherwise a functional normalisation will be done.}
+\item{method}{Type of normalisation algorithm. Options: funnorm, quantile, raw.}
+
+\item{nPCs}{Number of principal components that funnorm uses.}
 
 \item{save}{If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.}
 }
