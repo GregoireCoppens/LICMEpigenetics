@@ -2,9 +2,11 @@
 
 export(BatchEffect_Combat)
 export(BatchEffect_PCAHeatmap)
+export(BatchEffect_PCAHeatmap_Merge)
 export(BatchEffect_PointPlot)
 export(BatchEffect_Visualise)
 export(BatchEffect_prc)
+export(Clean_OldSets)
 export(ConvertSet)
 export(FindBadSamples)
 export(Make_RGset)
