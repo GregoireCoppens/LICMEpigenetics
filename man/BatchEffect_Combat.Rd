@@ -4,7 +4,7 @@
 \alias{BatchEffect_Combat}
 \title{BatchEffect_Combat function}
 \usage{
-BatchEffect_Combat(x, batch, RiskFactors, save = TRUE)
+BatchEffect_Combat(x, batch, RiskFactors, M = FALSE, save = TRUE)
 }
 \arguments{
 \item{x}{Epigenetic set object.}
@@ -12,6 +12,8 @@ BatchEffect_Combat(x, batch, RiskFactors, save = TRUE)
 \item{batch}{Non-biological factor for which the beta set needs to be corrected.}
 
 \item{RiskFactors}{Risk factors for which the Combat algorithm needs to correct}
+
+\item{M}{If TRUE, the combat will run using the M values instead of the beta values.}
 
 \item{save}{If TRUE, the new bset will be saved into the minfi_sets directory.}
 }
