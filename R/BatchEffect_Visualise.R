@@ -17,7 +17,7 @@ MergeMetadata <- function(x, df, by){
 
 
 #' @title BatchEffect_PointPlot Function
-#' @description Make pointplots from the first 3 principical components from the beta set to assess wether batch effect is present. Every Plot should only contain maximum 6 groups to maintain an overview.
+#' @description Make point plots from the first 3 principal components from the beta set to assess whether batch effect is present. Every Plot should only contain maximum 6 groups to maintain an overview.
 #'
 #' @param x Epigenetic set object.
 #' @param batch The non-biological factor which we want to investigate for batch effect.
@@ -97,15 +97,19 @@ BatchEffect_PointPlot <- function(x, batch, n = 6, xlim = c(-1000, 2500), ylim =
 
 BatchEffect_PCAHeatmap <- function(x, Cat_vars = c(), Cont_vars=c()){
   if(is.null(Cat_vars) & is.null(Cont_vars)) stop("No categorical or continuous variables provided. Please fill in at least one categorical or continuous variable.")
+
+  hm_name <- paste(x$normalisationMethod, paste0(x$BatchCorrections, collapse = ""), sep="_")
+  if(is.null(x$BatchCorrections)) hm_name <- paste(x$normalisationMethod, "NoBatchCorrection", sep="_")
+
   PC_count <- x$prc$n_pcs
-  variance_percent <- x$prc$pca_eig$variance.percent[1:PC_count] %>% round(2)
+  variance_percent <- x$prc$pca_eig$variance.percent[1:PC_count] %>% round(1)
   PCA_names <- paste0("PC",1:PC_count)
 
   # Categorical values
   df_heatmap_cat <- lapply(Cat_vars, function(i){
     df_temp <- x$metadata$df %>% select(starts_with("PC"), i)
     lapply(PCA_names, function(j){
-      summarise(df_temp, !!i := summary(aov(get(j)~get(i), data=df_temp))[[1]][["Pr(>F)"]][[1]])
+      summarise(df_temp, !!i := summary(aov(get(j)~as.factor(get(i)), data=df_temp))[[1]][["Pr(>F)"]][[1]])
     }) %>% bind_rows()
   }) %>% bind_cols()
 
@@ -126,16 +130,47 @@ BatchEffect_PCAHeatmap <- function(x, Cat_vars = c(), Cont_vars=c()){
     arrange(.data$vars, .data$PC)
 
   pdf(getPath(x, "PCAHeatmap", "output/BatchEffect", ".pdf"), onefile = TRUE)
-  x$heatmap$hm <- ggplot(data= x$heatmap$df_heatmap, aes(x = .data$PC, y = .data$vars, fill=.data$pgroup)) +
-    geom_tile(color="white", size=0.5) +
-    scale_fill_manual(name="P-values",
-                      values = c("<1e-10"="dark red", "<1e-5"="red", "<0.001"="orange", "<0.05"="pink", "<1"="white")) +
-    theme(axis.ticks=element_blank()) +
-    theme(axis.text.x=element_text(angle = 45, hjust = 1)) +
-    coord_equal()+
-    ggtitle("P-Value heatmap") + xlab("Principal Components (Variance Explained)") + ylab("")
-  print(x$heatmap$hm)
+  x$heatmap$hm[hm_name] <- list(ggplot(data= x$heatmap$df_heatmap, aes(x = .data$PC, y = .data$vars, fill=.data$pgroup)) +
+                                  geom_tile(color="white", size=0.5) +
+                                  scale_fill_manual(name="P-values",
+                                                    values = c("<1e-10"="dark red", "<1e-5"="red", "<0.001"="orange", "<0.05"="pink", "<1"="white")) +
+                                  theme(axis.ticks=element_blank()) +
+                                  theme(axis.text.x=element_text(angle=90)) +
+                                  theme(axis.text=element_text(size=16)) +
+                                  coord_equal()+
+                                  ggtitle("", paste(x$normalisationMethod, "Normalisation, Combat:", ifelse(is.null(x$BatchCorrections), "None" ,paste(x$BatchCorrections, collapse = " & ")))) +
+                                  xlab("Principal Components (Variance Explained)") + ylab(""))
+  print(x$heatmap$hm[[hm_name]])
   dev.off()
+  ggsave(filename = getPath(x, "PCAHeatmap", "output/BatchEffect", ".png"), plot = x$heatmap$hm[[hm_name]])
+  invisible(x)
+}
+
+#' Merge multiple heatmaps into one plot
+#'
+#' @param x Epigenetic set object.
+#'
+#' @return Updated Epigenetic set object.
+#' @export
+#'
+BatchEffect_PCAHeatmap_Merge <- function(x){
+  n_hm <- length(x$heatmap$hm)
+  if(n_hm==0) message("Not able to merge, No heatmaps present.")
+  if(n_hm==1) message("Not able to merge, only 1 heatmap present.")
+  if(n_hm==2){
+    ggsave(filename = getPath(x, "PCAHeatmap_1", "output/BatchEffect/Merged", ".png"), plot=x$heatmap$hm[[1]]+ theme(legend.position = "none"))
+    ggsave(filename = getPath(x, "PCAHeatmap_2", "output/BatchEffect/Merged", ".png"), plot=x$heatmap$hm[[2]]+ theme(axis.text.y=element_blank()))
+  }
+  if(n_hm>2){
+    ggsave(filename = getPath(x, "PCAHeatmap_1", "output/BatchEffect/Merged", ".png"), plot=x$heatmap$hm[[1]]+ theme(legend.position = "none"))
+    for(i in 2:(n_hm-1)){
+      ggsave(filename = getPath(x, paste0("PCAHeatmap_",i), "output/BatchEffect/Merged", ".png"), plot=x$heatmap$hm[[i]] + theme(axis.text.y=element_blank()) + theme(legend.position = "none") )
+      }
+    ggsave(filename = getPath(x, paste0("PCAHeatmap_",n_hm), "output/BatchEffect/Merged", ".png"), plot=x$heatmap$hm[[n_hm]]+ theme(axis.text.y=element_blank()))
+  }
+
+  # hm_merged <- do.call("plot_grid", c(hm_list, ncol=length(hm_list)))
+
   invisible(x)
 }
 

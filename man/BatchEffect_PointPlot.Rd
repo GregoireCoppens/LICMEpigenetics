@@ -27,5 +27,5 @@ BatchEffect_PointPlot(
 Updated Epigenetic set object.
 }
 \description{
-Make pointplots from the first 3 principical components from the beta set to assess wether batch effect is present. Every Plot should only contain maximum 6 groups to maintain an overview.
+Make point plots from the first 3 principal components from the beta set to assess whether batch effect is present. Every Plot should only contain maximum 6 groups to maintain an overview.
 }
