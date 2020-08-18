@@ -34,11 +34,9 @@ Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_tes
 
   #Import files
   ## Force is set to TRUE because we are working with EPIC data.
-  rgset <- read.metharray(pathNames, force=TRUE, verbose = FALSE)
-  read.metharray()
+  suppressWarnings(rgset <- read.metharray(pathNames, force=TRUE, verbose = TRUE))
 
   if(test){
-    # randomsamples <- sample(ncol(rgset), floor(ncol(rgset)/20))
     randomsamples <- sample(ncol(rgset), n_testsamples)
     rgset_test <- rgset[,randomsamples]
     if(save){
