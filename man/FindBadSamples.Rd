@@ -4,7 +4,13 @@
 \alias{FindBadSamples}
 \title{FindBadSamples function}
 \usage{
-FindBadSamples(x, badSamples = c(), n = 4, ylim = c(0, 5))
+FindBadSamples(
+  x,
+  badSamples = c(),
+  n = 4,
+  ylim = c(0, 5),
+  Swabname_position = 3
+)
 }
 \arguments{
 \item{x}{Epigenetic set object.}
@@ -14,6 +20,8 @@ FindBadSamples(x, badSamples = c(), n = 4, ylim = c(0, 5))
 \item{n}{number of density plots per plot. Max 4 is suggested.}
 
 \item{ylim}{range of the y-axis}
+
+\item{Swabname_position}{Position of swabname in the filename (separated by "_")}
 }
 \value{
 Updated Epigenetic set object.

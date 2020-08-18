@@ -4,7 +4,12 @@
 \alias{RemoveBadSamples}
 \title{RemoveBadSamples function}
 \usage{
-RemoveBadSamples(x, badSamplesNames = c(), badSamplesNum = c())
+RemoveBadSamples(
+  x,
+  badSamplesNames = c(),
+  badSamplesNum = c(),
+  Swabname_position = 3
+)
 }
 \arguments{
 \item{x}{Epigenetic set object.}
@@ -12,6 +17,8 @@ RemoveBadSamples(x, badSamplesNames = c(), badSamplesNum = c())
 \item{badSamplesNames}{Filenames from bad samples}
 
 \item{badSamplesNum}{Index numbers from bad samples.}
+
+\item{Swabname_position}{Position of swabname in the filename (separated by "_")}
 }
 \value{
 Updated Epigenetic set object.
