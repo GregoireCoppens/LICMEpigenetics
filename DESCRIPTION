@@ -5,8 +5,9 @@ Version: 0.1.0
 Author: Gregoire Coppens <gregoire.coppens@kuleuven.be>
 Maintainer: Gregoire Coppens <gregoire.coppens@kuleuven.be>
 Description: Provides easy to use,
-  objective oriented functions using the minfi package
-  and the tidyverse to process Epigenetic data.
+  objective oriented functions for preprocessing methylation 
+  produced by a Illumina beadchip and 
+  detecting differentially methylated positions and regions within the DNA.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
