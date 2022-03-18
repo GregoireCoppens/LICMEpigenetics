@@ -25,7 +25,7 @@ Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_tes
 
   # Get file names
   pathNames <- unlist(lapply(idat_paths, function(idat_path){
-    fileNames <- list.files(idat_path, pattern = "\\.idat") # Read all idat files
+    fileNames <- list.files(idat_path, pattern = "\\.idat", recursive = TRUE) # Read all idat files
     baseNames_temp <- fileNames[grepl("_Grn.", fileNames)] # Get all filenames that contain "_Grn"
     baseNames_temp2 <- baseNames_temp[grepl(subselect,baseNames_temp)] # Only get those filenames that contain subselection
     baseNames <- unlist(lapply(baseNames_temp2, function(i){strsplit(i, '_Grn')[[1]][[1]]})) #Get the name of the file without "_Grn"
