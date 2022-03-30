@@ -8,6 +8,7 @@
 #' @param DMP Output from `DMP_limma()` function.
 #' @param lambda Gaussian kernel bandwidth for smoothed-function estimation. Also informs DMR bookend definition; gaps >= lambda between significant CpG sites will be in separate DMRs. Support is truncated at 5*lambda. Default is 1000 nucleotides.
 #' @param fdr false discovery rate, default = 0.05.
+#' @param ann_array Specify whether Illumina arraytype is 'IlluminaHumanMethylation450k' or 'IlluminaHumanMethylationEPIC' and the annotation file is 'ilmn12.hg19' or "ilmn10b2.hg19"
 #'
 #' @return An S4 object with statistics for every DMR
 #' \itemize{
@@ -17,15 +18,14 @@
 #' }
 #' @export
 #'
-#' @examples
-DMR_dmrcate <- function(set, DMP, lambda=1000, fdr=0.05){
+DMR_dmrcate <- function(set, DMP, lambda=1000, fdr=0.05, ann_array=c(array = "IlluminaHumanMethylationEPIC", annotation = "ilmn10b2.hg19")){
   if(class(set) =="GenomicRatioSet") GRcset <- set
   if(class(set) =="GenomicMethylSet") GRcset <- minfi::ratioConvert(set)
 
   annotation <- DMRcate::cpg.annotate(object = GRcset, datatype = "array", what = "M",
                              analysis.type = "differential", design = DMP$design,
                              contrasts = TRUE, cont.matrix = DMP$contMatrix,
-                             coef = colnames(DMP$contMatrix)[1], arraytype = "EPIC", fdr = fdr)
+                             coef = colnames(DMP$contMatrix)[1], annotation=ann_array, fdr = fdr)
   DMR <- DMRcate::dmrcate(annotation, lambda=lambda, C=2)
   DMRRanges <- DMRcate::extractRanges(DMR)
 
