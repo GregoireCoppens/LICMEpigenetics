@@ -24,11 +24,26 @@ devtools::install_github(GregoireCoppens/LICMEpigenetics, ref="master", auth_tok
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to preprocess methylation data starting from idat files and find the differentially methylated positions (DMPs):
 
 ``` r
 library(LICMEpigenetics)
-#> Setting options('download.file.method.GEOquery'='auto')
-#> Setting options('GEOquery.inmemory.gpl'=FALSE)
-## basic example code
+library(dplyr)
+
+# Setup
+set.seed(99999)
+base_dir <- system.file("extdata", package="minfiDataEPIC") # path to idat files or folders
+cat_vars = c("cat_1") # generic categorical name
+
+# Preprocessing methylation data
+preprocessed_set <- Make_RGset(base_dir, name="test") %>% # import idats
+  ProbeNormalisation() %>% # Functional normalisation using funnorm
+  ProbeExclusion() %>% # Exclude CPG, SBE, sex probes and probes not exceeding background signal
+  ConvertSet() # convert genomic methyl set into beta set.
+
+# DMP calculation
+Random_AdjustmentVars <- data.frame(replicate(1, sample(0:1, 3, rep=TRUE)))
+colnames(Random_AdjustmentVars) <- cat_vars
+
+test_LimmaOutput <- DMP_limma(preprocessed_set$mset, Random_AdjustmentVars, cat_vars=cat_vars, Group="cat_1")
 ```
