@@ -16,16 +16,23 @@ test_that("Test that probe normalisation works - funnorm", {
   expect_equal(dim(testSet_afterNormalisation$mset), c(865859, 3))
 })
 
+## Probe exclusion
+testSet_afterProbeExclusion = ProbeExclusion(testSet_afterNormalisation, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = FALSE, delay = FALSE)
+test_that("Test that probe exclusion works",{
+  expect_equal(dim(testSet_afterProbeExclusion$mset), c(815665, 3))
+  expect_equal(testSet_afterProbeExclusion$params$SnpSexExcl, TRUE)
+})
+
 ## DMP_limma
 cat_vars = paste0("cat_", 1:1)
 cont_vars = paste0("cont_", 1)
-Random_AdjustmentVars = data.frame(replicate(length(cat_vars), sample(0:1, dim(testSet_afterNormalisation$mset)[2], rep=TRUE)),
-                                   replicate(length(cont_vars), sample(0:10, dim(testSet_afterNormalisation$mset)[2], rep=TRUE)))
+Random_AdjustmentVars = data.frame(replicate(length(cat_vars), sample(0:1, dim(testSet_afterProbeExclusion$mset)[2], rep=TRUE)),
+                                   replicate(length(cont_vars), sample(0:10, dim(testSet_afterProbeExclusion$mset)[2], rep=TRUE)))
 colnames(Random_AdjustmentVars) = c(cat_vars, cont_vars)
-test_LimmaOutput = suppressWarnings(DMP_limma(testSet_afterNormalisation$mset, Random_AdjustmentVars, cat_vars=cat_vars, Group="cat_1"))
+test_LimmaOutput = suppressWarnings(DMP_limma(testSet_afterProbeExclusion$mset, Random_AdjustmentVars, cat_vars=cat_vars, Group="cat_1"))
 test_that("test that DMP_limma finds DMPs", {
-  expect_equal(dim(test_LimmaOutput$DMPresult), c(865859, 6))
-  expect_equal(length(test_LimmaOutput$Sign_CpG), 627)
+  expect_equal(dim(test_LimmaOutput$DMPresult), c(815665, 6))
+  expect_equal(length(test_LimmaOutput$Sign_CpG), 576)
 })
 
 ## DMR_DMRCate
