@@ -16,8 +16,10 @@ You can install the released version of LICMEpigenetics from
 [Github](https://github.com/GregoireCoppens/LICMEpigenetics) with:
 
 ``` r
+#auth_token expires 06/04/2022
+
 library(devtools)
-install_github(GregoireCoppens/LICMEpigenetics)
+devtools::install_github(GregoireCoppens/LICMEpigenetics, ref="master", auth_token="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")
 ```
 
 ## Example
