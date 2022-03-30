@@ -4,7 +4,13 @@
 \alias{DMR_dmrcate}
 \title{Detect differentially methylated positions in the DNA using the limma package.}
 \usage{
-DMR_dmrcate(set, DMP, lambda = 1000, fdr = 0.05)
+DMR_dmrcate(
+  set,
+  DMP,
+  lambda = 1000,
+  fdr = 0.05,
+  ann_array = c(array = "IlluminaHumanMethylationEPIC", annotation = "ilmn10b2.hg19")
+)
 }
 \arguments{
 \item{set}{Preprocessed methylation set, can be genomic methyl set or genomic ratio set.}
@@ -14,6 +20,8 @@ DMR_dmrcate(set, DMP, lambda = 1000, fdr = 0.05)
 \item{lambda}{Gaussian kernel bandwidth for smoothed-function estimation. Also informs DMR bookend definition; gaps >= lambda between significant CpG sites will be in separate DMRs. Support is truncated at 5*lambda. Default is 1000 nucleotides.}
 
 \item{fdr}{false discovery rate, default = 0.05.}
+
+\item{ann_array}{Specify whether Illumina arraytype is 'IlluminaHumanMethylation450k' or 'IlluminaHumanMethylationEPIC' and the annotation file is 'ilmn12.hg19' or "ilmn10b2.hg19"}
 }
 \value{
 An S4 object with statistics for every DMR
