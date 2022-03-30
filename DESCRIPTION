@@ -5,8 +5,8 @@ Version: 0.1.0
 Author: Gregoire Coppens <gregoire.coppens@kuleuven.be>
 Maintainer: Gregoire Coppens <gregoire.coppens@kuleuven.be>
 Description: Provides easy to use,
-  objective oriented functions for preprocessing methylation 
-  produced by a Illumina beadchip and 
+  pipeable object structure for preprocessing methylation data
+  produced by an Illumina beadchip and 
   detecting differentially methylated positions and regions within the DNA.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -16,18 +16,18 @@ Depends:
     R (>= 4.0.0)
 biocViews:
 Imports:
-    minfi,
-    minfiDataEPIC,
-    dplyr,
-    tidyr,
-    ggplot2,
-    factoextra,
-    sva,
-    rlang,
-    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
-    limma,
-    DMRcate,
-    tibble
+    minfi (>= 1.36.0),
+    minfiDataEPIC (>= 1.16.0),
+    dplyr (>= 1.0.4),
+    tidyr (>= 1.1.2),
+    ggplot2 (>= 3.3.3),
+    factoextra (>= 1.0.7),
+    sva (>= 3.38.0),
+    rlang (>= 0.4.10),
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19 (>= 0.6.0),
+    limma (>= 3.46.0),
+    DMRcate (>= 2.4.1),
+    tibble (>= 3.0.6)
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
