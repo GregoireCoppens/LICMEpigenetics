@@ -36,9 +36,9 @@ test_that("test that DMP_limma finds DMPs", {
 })
 
 ## DMR_DMRCate
+#DMR_output = DMR_dmrcate(testSet_afterProbeExclusion$mset, test_LimmaOutput, lambda = 100000, fdr = 1)
 test_that("DMR_dmrcate returns regions", {
   ## Currently not enough data
-  #DMR_output = DMR_dmrcate(testSet_afterNormalisation$mset, test_LimmaOutput, lambda = 100000, fdr = 1)
   #expect_equal(dim(DMR_output$DMRresult), c(, ))
   expect_equal(1, 1)
 })
