@@ -4,10 +4,10 @@
 \alias{DMR_dmrcate}
 \title{Detect differentially methylated positions in the DNA using the limma package.}
 \usage{
-DMR_dmrcate(GRcset, DMP, lambda = 1000, fdr = 0.05)
+DMR_dmrcate(set, DMP, lambda = 1000, fdr = 0.05)
 }
 \arguments{
-\item{GRcset}{Preprocessed Green-Red methylation set}
+\item{set}{Preprocessed methylation set, can be genomic methyl set or genomic ratio set.}
 
 \item{DMP}{Output from `DMP_limma()` function.}
 
@@ -16,7 +16,7 @@ DMR_dmrcate(GRcset, DMP, lambda = 1000, fdr = 0.05)
 \item{fdr}{false discovery rate, default = 0.05.}
 }
 \value{
-A a S4 object with statistics for every DMR
+An S4 object with statistics for every DMR
 \itemize{
    \item DMR - `dmrcate()`output, a S4 object with statistics for every DMR
    \item DMRRanges - `extractRanges()` output, a S4 object with Ranges from found DMRs
