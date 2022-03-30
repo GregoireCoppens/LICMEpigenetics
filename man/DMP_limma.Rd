@@ -4,10 +4,10 @@
 \alias{DMP_limma}
 \title{Detect differentially methylated positions in the DNA using the limma package.}
 \usage{
-DMP_limma(GRcset, Patient_info, cat_vars, cont_vars = c(), Group = NULL)
+DMP_limma(set, Patient_info, cat_vars = NULL, cont_vars = NULL, Group = NULL)
 }
 \arguments{
-\item{GRcset}{Preprocessed Green-Red methylation set}
+\item{set}{Preprocessed methylation set, can be genomic methyl set or genomic ratio set.}
 
 \item{Patient_info}{Data frame with adjustment variables.}
 
@@ -32,7 +32,4 @@ This function first uses the `lmfit` function from the `limma` package with meth
 Next it uses the `contrast.fit` function from the `limma` package with the `lmfit` output and the generated contrast matrix as its inputs.
 The contrast matrix specifies the comparison of interest (e.g.: Patients vs Controls).
 To compute a moderated t-statistic of differential expression, it uses empirical Bayes moderation of the standard error.
-}
-\examples{
-
 }
