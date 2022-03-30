@@ -7,6 +7,7 @@
 #' @param test Make a smaller set that can be used to test all the functions.
 #' @param n_testsamples The number of samples in a test set (if test = TRUE). Default: 5.
 #' @param save Set to TRUE if you want to save the rgset as an .Rdata file.
+#' @param verbose When set to 1 or higher more messages will be shown.
 #'
 #' @return Epigenetic set object.
 #'
@@ -16,7 +17,7 @@
 #' @export
 #'
 
-Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_testsamples=5, save=FALSE){
+Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_testsamples=5, save=FALSE, verbose=FALSE){
   if(name==""){
     name <- lapply(idat_paths, function(path){path %>% base::strsplit("/") %>% unlist() %>% tail(n=1)}) %>% paste(collapse = "_")
     if(name=="") name <- "Methylome"
@@ -34,7 +35,7 @@ Make_RGset <- function(idat_paths="./", name="", subselect="", test=FALSE, n_tes
 
   #Import files
   ## Force is set to TRUE because we are working with EPIC data.
-  suppressWarnings(rgset <- read.metharray(pathNames, force=TRUE, verbose = TRUE))
+  suppressWarnings(rgset <- read.metharray(pathNames, force=TRUE, verbose = verbose))
 
   if(test){
     randomsamples <- sample(ncol(rgset), n_testsamples)

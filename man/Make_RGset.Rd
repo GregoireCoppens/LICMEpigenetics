@@ -10,7 +10,8 @@ Make_RGset(
   subselect = "",
   test = FALSE,
   n_testsamples = 5,
-  save = FALSE
+  save = FALSE,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ Make_RGset(
 \item{n_testsamples}{The number of samples in a test set (if test = TRUE). Default: 5.}
 
 \item{save}{Set to TRUE if you want to save the rgset as an .Rdata file.}
+
+\item{verbose}{When set to 1 or higher more messages will be shown.}
 }
 \value{
 Epigenetic set object.

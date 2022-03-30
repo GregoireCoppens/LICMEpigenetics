@@ -4,7 +4,7 @@
 \alias{ProbeNormalisation}
 \title{ProbeNormalisation function}
 \usage{
-ProbeNormalisation(x, method = "funnorm", nPCs = 3, save = FALSE)
+ProbeNormalisation(x, method = "funnorm", nPCs = 3, save = FALSE, verbose = 0)
 }
 \arguments{
 \item{x}{Epigenetic set object.}
@@ -14,6 +14,8 @@ ProbeNormalisation(x, method = "funnorm", nPCs = 3, save = FALSE)
 \item{nPCs}{Number of principal components that funnorm uses.}
 
 \item{save}{If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.}
+
+\item{verbose}{When set to 1 or higher more messages will be shown.}
 }
 \value{
 Updated Epigenetic set object.

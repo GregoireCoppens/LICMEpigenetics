@@ -31,6 +31,7 @@ ProbeBackgroundCheck <- function(x){
 #' @param method Type of normalisation algorithm. Options: funnorm, quantile, raw.
 #' @param nPCs Number of principal components that funnorm uses.
 #' @param save If TRUE, the methylset will be saved to the "minfi_sets" sub-directory.
+#' @param verbose When set to 1 or higher more messages will be shown.
 #'
 #' @return Updated Epigenetic set object.
 #'
@@ -39,14 +40,14 @@ ProbeBackgroundCheck <- function(x){
 #'
 #' @export
 #'
-ProbeNormalisation <- function(x, method="funnorm", nPCs = 3, save=FALSE){
+ProbeNormalisation <- function(x, method="funnorm", nPCs = 3, save=FALSE, verbose=0){
   if(ncol(x$rgset)>=500) message("Warning: This set might be too large to fit in your RAM memory")
   if(method=="funnorm"){
-    x$mset <- preprocessFunnorm(x$rgset, ratioConvert = FALSE, nPCs = nPCs, verbose = 2)
+    x$mset <- preprocessFunnorm(x$rgset, ratioConvert = FALSE, nPCs = nPCs, verbose = verbose)
     x$params$funnorm <- TRUE
   }
   if(method=="quantile"){
-    x$mset <- preprocessQuantile(x$rgset, verbose = 2)
+    x$mset <- preprocessQuantile(x$rgset, verbose = verbose)
     x$params$quant <- TRUE
   }
   if(method=="raw"){
