@@ -82,7 +82,7 @@ ProbeNormalisation <- function(x, method="funnorm", nPCs = 3, save=FALSE, verbos
 #' @importFrom utils write.csv
 #' @export
 #'
-ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = TRUE, delay = FALSE){
+ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = FALSE, delay = FALSE){
   # Removing CpGs
   # Source: http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0194938.s001
   if(delay) x$mset_old <- x$mset # Temp save original mset
@@ -166,7 +166,7 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
 #' @importFrom utils write.csv
 #' @export
 #'
-ConvertSet <- function(x, beta=TRUE, M=FALSE, save=TRUE){
+ConvertSet <- function(x, beta=TRUE, M=FALSE, save=FALSE){
   # betas
   if(beta){
     bset_temp <- getBeta(x$mset)

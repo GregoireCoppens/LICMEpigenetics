@@ -4,7 +4,7 @@
 \alias{ConvertSet}
 \title{ConvertSet function}
 \usage{
-ConvertSet(x, beta = TRUE, M = FALSE, save = TRUE)
+ConvertSet(x, beta = TRUE, M = FALSE, save = FALSE)
 }
 \arguments{
 \item{x}{Epigenetic set object.}

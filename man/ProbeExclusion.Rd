@@ -9,7 +9,7 @@ ProbeExclusion(
   snps = c("CpG", "SBE"),
   sex = TRUE,
   background = TRUE,
-  ExportExcludedProbes = TRUE,
+  ExportExcludedProbes = FALSE,
   delay = FALSE
 )
 }
