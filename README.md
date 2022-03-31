@@ -45,5 +45,5 @@ preprocessed_set <- Make_RGset(base_dir, name="test") %>% # import idats
 Random_AdjustmentVars <- data.frame(replicate(1, sample(0:1, 3, rep=TRUE)))
 colnames(Random_AdjustmentVars) <- cat_vars
 
-test_LimmaOutput <- DMP_limma(preprocessed_set$mset, Random_AdjustmentVars, cat_vars=cat_vars, Group="cat_1")
+LimmaOutput <- DMP_limma(preprocessed_set$mset, Random_AdjustmentVars, cat_vars=cat_vars, Group="cat_1")
 ```
