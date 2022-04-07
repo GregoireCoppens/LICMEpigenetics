@@ -13,12 +13,12 @@ differentially methylated positions and regions within the DNA.
 ## Installation
 
 You can install the released version of LICMEpigenetics from
-[Github](https://github.com/GregoireCoppens/LICMEpigenetics) with:
+[Github](https://github.com/LICMLeuven/LICMEpigenetics) with:
 
 ``` r
 
 library(devtools)
-devtools::install_github("GregoireCoppens/LICMEpigenetics")
+devtools::install_github("LICMLeuven/LICMEpigenetics")
 ```
 
 ## Example
