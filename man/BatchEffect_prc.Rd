@@ -7,8 +7,8 @@
 BatchEffect_prc(
   x,
   n_pcs = 8,
-  filename_info = c("Chip", "Well", "Swabnr", "Experiment_Method", "Patient_Group",
-    "Patient_Number", "Experiment_Group", "Time"),
+  filename_info = c("Chip", "Well", "Sample_nr", "Sample_type", "Ptn_Cntrl", "Patnr",
+    "Early_Late", "Timepoint"),
   filename_separator = "_"
 )
 }

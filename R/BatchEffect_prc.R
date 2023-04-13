@@ -20,7 +20,7 @@
 #' @importFrom grDevices dev.off
 #' @export
 #'
-BatchEffect_prc <- function(x, n_pcs=8, filename_info = c("Chip", "Well", "Swabnr", "Experiment_Method", "Patient_Group", "Patient_Number", "Experiment_Group", "Time"), filename_separator="_"){
+BatchEffect_prc <- function(x, n_pcs=8, filename_info = c("Chip", "Well", "Sample_nr", "Sample_type", "Ptn_Cntrl", "Patnr", "Early_Late", "Timepoint"), filename_separator="_"){
   if(is.null(x$prc$n_pcs)|n_pcs != 8) x$prc$n_pcs <- n_pcs
   if(filename_separator=="" & !is.null(filename_info)) filename_separator  <-  "__/"
   if(is.null(filename_info)){
