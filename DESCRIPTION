@@ -13,21 +13,22 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends:
-    R (>= 4.0.0)
+    R 
 biocViews:
 Imports:
-    minfi (>= 1.36.0),
-    minfiDataEPIC (>= 1.16.0),
-    dplyr (>= 1.0.0),
-    tidyr (>= 1.1.0),
-    ggplot2 (>= 3.3.3),
-    factoextra (>= 1.0.0),
-    sva (>= 3.38.0),
-    rlang (>= 0.4.0),
-    IlluminaHumanMethylationEPICanno.ilm10b4.hg19 (>= 0.6.0),
-    limma (>= 3.44.0),
-    DMRcate (>= 2.4.0),
-    tibble (>= 3.0.0)
+    minfi,
+    minfiDataEPIC,
+    dplyr,
+    tidyr,
+    ggplot2,
+    factoextra,
+    sva,
+    rlang,
+    IlluminaHumanMethylationEPICanno.ilm10b4.hg19,
+    limma,
+    DMRcate,
+    tibble,
+    locfit
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
