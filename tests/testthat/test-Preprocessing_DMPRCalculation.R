@@ -23,6 +23,12 @@ test_that("Test that probe exclusion works",{
   expect_equal(testSet_afterProbeExclusion$params$SnpSexExcl, TRUE)
 })
 
+testSet_afterProbeExclusion_min = ProbeExclusion(testSet_afterNormalisation, snps = c("CpG", "SBE"), sex = FALSE, background = FALSE, ExportExcludedProbes = FALSE, delay = FALSE)
+test_that("Test that probe exclusion works",{
+  expect_equal(dim(testSet_afterProbeExclusion_min$mset), c(835424, 3))
+  expect_equal(testSet_afterProbeExclusion_min$params$sexExcl, FALSE)
+})
+
 ## DMP_limma
 cat_vars = paste0("cat_", 1:1)
 cont_vars = paste0("cont_", 1)
