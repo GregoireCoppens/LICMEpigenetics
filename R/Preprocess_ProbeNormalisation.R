@@ -80,6 +80,7 @@ ProbeNormalisation <- function(x, method="funnorm", nPCs = 3, save=FALSE, verbos
 #' @importFrom minfi addSnpInfo
 #' @importFrom minfi dropLociWithSnps
 #' @importFrom utils write.csv
+#' @importFrom stringr str_detect
 #' @export
 #'
 ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = TRUE, ExportExcludedProbes = FALSE, delay = FALSE){
@@ -87,8 +88,27 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
   # Source: http://journals.plos.org/plosone/article/file?type=supplementary&id=info:doi/10.1371/journal.pone.0194938.s001
   if(delay) x$mset_old <- x$mset # Temp save original mset
 
-  # Remove Sex
   message("CpGs before removal: ",nrow(x$mset))
+
+  # Remove probes that do not exceed background
+  if(background){
+    x <- ProbeBackgroundCheck(x)
+    badCpGs <- x$excludedProbes$FailedBackgroundProbes$names
+
+    if(ExportExcludedProbes){
+      x$excludedProbes$backgroundCheck <- data.frame("CpG"=badCpGs, "Type"="FailedBackgroundCheck")
+      write.csv(x$excludedProbes$backgroundCheck, getPath(x,"ExcludedProbes_BackgroundCheck", "output/ProbeSelection", ".csv"))
+    }
+
+    # goodCpGs <- rownames(x$mset)[-grep(paste0(badCpGs, collapse = "|"), rownames(x$mset))]
+    goodCpGs <- rownames(x$mset)[!stringr::str_detect(rownames(x$mset), paste0(badCpGs, collapse = "|"))]
+    x$mset <- x$mset[goodCpGs,]
+
+    message("Number of CpGs that didn't pass the background check: ",length(badCpGs))
+    message("CpGs after background check: ",nrow(x$mset))
+  }
+
+  # Remove Sex
   annotation <- getAnnotation(x$rgset)
   sex_cpgs <- c()
   SNP_cpgs <- c()
@@ -98,6 +118,9 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
     x$mset <- x$mset[rownames(x$mset) %in% row.names(autosomes),]
     x$params$sexExcl = TRUE
     message("CpGs after sex removal: ",nrow(x$mset))
+  } else {
+    x$params$sexExcl = FALSE
+    message("No CpG sites on Sex Chromosomes removed.")
   }
   if(!is.null(snps)){
     # More info on SNPs: https://www.bioconductor.org/help/course-materials/2015/BioC2015/methylation450k.html#snps
@@ -110,6 +133,9 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
     x$mset <- mset_temp
     x$params$SnpExcl = TRUE
     message("CpGs after SNP removal: ",nrow(x$mset))
+  } else {
+    x$params$SnpExcl = FALSE
+    message("No CpG sites on SNPs removed.")
   }
 
   if(x$params$SnpExcl & x$params$sexExcl){
@@ -127,26 +153,21 @@ ProbeExclusion <- function(x, snps = c("CpG", "SBE"), sex = TRUE, background = T
   }
 
   if(ExportExcludedProbes){
-    df_sex <- data.frame("CpG" = sex_cpgs, "Type"="Sex")
-    df_SNP <- data.frame("CpG" = SNP_cpgs, "Type"="SNP")
-    x$excludedProbes$SexSNPs <- rbind(df_sex, df_SNP)
+    if(sex) df_sex <- data.frame("CpG" = sex_cpgs, "Type"="Sex")
+    if(!is.null(snps)) df_SNP <- data.frame("CpG" = SNP_cpgs, "Type"="SNP")
+
+    if(sex & !is.null(snps)){
+      x$excludedProbes$SexSNPs <- rbind(df_sex, df_SNP)
+    } else{
+      if(sex) x$excludedProbes$SexSNPs <- df_sex
+      if(!is.null(snps)) x$excludedProbes$SexSNPs <- df_SNP
+      if(!sex & is.null(snps)) x$excludedProbes$SexSNPs <- data.frame("CpG"=NULL, "Type"=NULL)
+    }
 
     write.csv(x$excludedProbes$SexSNPs, getPath(x,"ExcludedProbes_SexSNPs", "output/ProbeSelection", ".csv"))
   }
 
-  if(background){
-    x <- ProbeBackgroundCheck(x)
-    badCpGs <- x$excludedProbes$FailedBackgroundProbes$names
-    if(ExportExcludedProbes){
-      x$excludedProbes$backgroundCheck <- data.frame("CpG"=badCpGs, "Type"="FailedBackgroundCheck")
-      write.csv(x$excludedProbes$backgroundCheck, getPath(x,"ExcludedProbes_BackgroundCheck", "output/ProbeSelection", ".csv"))
-    }
 
-    goodCpGs <- rownames(x$mset)[-grep(paste0(badCpGs, collapse = "|"), rownames(x$mset))]
-    x$mset <- x$mset[goodCpGs,]
-    # message("Number of CpGs that didn't pass the background check: ",length(badCpGs))
-    message("CpGs after background check: ",nrow(x$mset))
-  }
   invisible(gc())
   invisible(x)
 }
