@@ -10,7 +10,8 @@
 #' @param cat_vars The variable names in Patient_info that are categorical variables
 #' @param cont_vars The variable names in Patient_info that are continuous variables
 #' @param Group The variable in Patient_info that represents which observations belong to which groups
-#'
+#' @param confint To enable confidence interval for the logFC, set to TRUE or change to CI range.
+#' 
 #' @return A list with limma output variables and temporary results
 #' \itemize{
 #'    \item DMPresult - Data table with statistics per CpG sites
@@ -32,7 +33,7 @@
 #' @importFrom tibble rownames_to_column
 #' @importFrom dplyr filter
 #'
-DMP_limma <- function(set, Patient_info, cat_vars = NULL, cont_vars=NULL, Group=NULL){
+DMP_limma <- function(set, Patient_info, cat_vars = NULL, cont_vars=NULL, Group=NULL, confint=TRUE){
   # Define inputs
   if(class(set) =="GenomicRatioSet") GRcset <- set
   if(class(set) =="GenomicMethylSet") GRcset <- minfi::ratioConvert(set)
@@ -95,7 +96,8 @@ DMP_limma <- function(set, Patient_info, cat_vars = NULL, cont_vars=NULL, Group=
 
   DMPresult <- limma::topTable(fit_EB,
                       n=Inf,
-                      coef=1)
+                      coef=1,
+                      confint=confint)
 
   Sign_CpG_df <- DMPresult %>%
     tibble::rownames_to_column("CpG_name") %>%
