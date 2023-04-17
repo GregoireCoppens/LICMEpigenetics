@@ -4,7 +4,14 @@
 \alias{DMP_limma}
 \title{Detect differentially methylated positions in the DNA using the limma package.}
 \usage{
-DMP_limma(set, Patient_info, cat_vars = NULL, cont_vars = NULL, Group = NULL)
+DMP_limma(
+  set,
+  Patient_info,
+  cat_vars = NULL,
+  cont_vars = NULL,
+  Group = NULL,
+  confint = TRUE
+)
 }
 \arguments{
 \item{set}{Preprocessed methylation set, can be genomic methyl set or genomic ratio set.}
@@ -16,6 +23,8 @@ DMP_limma(set, Patient_info, cat_vars = NULL, cont_vars = NULL, Group = NULL)
 \item{cont_vars}{The variable names in Patient_info that are continuous variables}
 
 \item{Group}{The variable in Patient_info that represents which observations belong to which groups}
+
+\item{confint}{To enable confidence interval for the logFC, set to TRUE or change to CI range.}
 }
 \value{
 A list with limma output variables and temporary results
